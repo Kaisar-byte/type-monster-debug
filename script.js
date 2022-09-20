@@ -27,6 +27,7 @@ const typeController = (e) => {
   if (newLetter == "Backspace") {
     userText = userText.slice(0, userText.length - 1);
     return display.removeChild(display.lastChild);
+
   }
 
   // these are the valid character we are allowing to type
@@ -40,12 +41,15 @@ const typeController = (e) => {
 
   userText += newLetter;
 
+
   const newLetterCorrect = validate(newLetter);
+  console.log(newLetterCorrect)
 
   if (newLetterCorrect) {
     display.innerHTML += `<span class="green">${newLetter === " " ? "▪" : newLetter}</span>`;
   } else {
     display.innerHTML += `<span class="red">${newLetter === " " ? "▪" : newLetter}</span>`;
+    errorCount++;
   }
 
   // check if given question text is equal to user typed text
@@ -67,7 +71,7 @@ const gameOver = () => {
   // the current time is the finish time
   // so total time taken is current time - start time
   const finishTime = new Date().getTime();
-  const timeTaken = (finishTime - startTime) / 1000;
+  const timeTaken = Math.floor((finishTime - startTime) / 1000) % 60;
 
   // show result modal
   resultModal.innerHTML = "";
@@ -92,6 +96,7 @@ const gameOver = () => {
   // restart everything
   startTime = null;
   errorCount = 0;
+  // errorCount = 0;
   userText = "";
   display.classList.add("inactive");
 };
@@ -107,7 +112,6 @@ const start = () => {
 
   let count = 3;
   countdownOverlay.style.display = "flex";
-  console.log(count)
   const startCountdown = setInterval(() => {
     countdownOverlay.innerHTML = `<h1>${count}</h1>`;
 
@@ -120,6 +124,7 @@ const start = () => {
 
       clearInterval(startCountdown);
       startTime = new Date().getTime();
+      console.log(startTime)
     }
     count--;
   }, 1000);
@@ -134,7 +139,7 @@ displayHistory();
 // Show typing time spent
 setInterval(() => {
   const currentTime = new Date().getTime();
-  const timeSpent = (currentTime - startTime) / 1000;
+  const timeSpent = Math.floor((currentTime - startTime) / 1000) % 60;
 
 
   document.getElementById("show-time").innerHTML = `${startTime ? timeSpent : 0} seconds`;
